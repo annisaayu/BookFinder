@@ -9,7 +9,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import BookCard from '../components/BookCard';
-import './App.css';
+import '../App.css';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const HomePage = () => {
@@ -19,24 +19,25 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [foundBook, setFoundBook] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [percentage, setPercentage] = useState(0);
 
   const getBooks = (idx) => {
     setLoading(true);
     axios({
         method: 'get',
         url: `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${idx}&maxResults=9&key=${API_KEY}`,
-        onDownloadProgress(progressEvent) {
-          let progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-          console.log(progress, "progress")
-          setPercentage(progress)
-        }
       })
       .then((response) => {
-        setPages(Math.ceil(response.data.totalItems/9));
-        if(response.data.totalItems === 0) setFoundBook(false) ;
-        setBooks(response.data.totalItems > 0 ? response.data.items : [])
-        setPercentage(0)
+        setPages(Math.ceil((response.data.totalItems)/9));
+        if (!response.data.items) {
+          setFoundBook(false)
+        } else {
+          setBooks(response.data.items);
+          setFoundBook(true)
+        };
+        setLoading(false);
+      })
+      .catch(e => {
+        setFoundBook(false)
         setLoading(false);
       })
   }
@@ -63,31 +64,41 @@ const HomePage = () => {
         <p>Book Finder</p>
         <TextField 
           id="standard-basic" 
-          label="Standard" 
+          label="Search Book (title, author, etc)" 
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={(e) => {
             if (e.key === 'Enter') onCLickSearch()
+        }}
+        style={{
+          width:'40vw',
         }}
         />
         <Button variant="contained" color="primary" onClick={onCLickSearch}>
           Search
         </Button>
-
       </header>
       
       <Container>
-        <Grid container spacing={4}>
+
         {
           loading
-          ?(<CircularProgress />)
-          : books.length > 0 
-          ? books.map((card) => <BookCard card={card}/>) 
+          ?(<section className="Pagination-area"><CircularProgress /></section>)
           : !foundBook
-          ? (<Typography>Buku yang anda cari tidak ditemukan</Typography>)
+          ? (<section className="Pagination-area">
+              <Typography>The book you were looking for was not found</Typography>
+            </section>)
+          : books.length > 0 
+          ? (
+            <Grid container spacing={4}>
+              { books.map((card) => (<BookCard card={card}/>)) }
+           </Grid>
+          )
           : null
         }
-        </Grid>
-        {books.length > 0 && (<Pagination count={pages} page={page} onChange={onChangePage} />) }
+
+        <section className="Pagination-area">
+          {books.length > 0 && foundBook && (<Pagination count={pages} page={page} onChange={onChangePage} variant="outlined" color="primary" />) }
+        </section>
         
       </Container>
     </React.Fragment>
