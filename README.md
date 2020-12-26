@@ -26,6 +26,3 @@ npm install
 npm start
 ```
 
-### How To Use
-
-
