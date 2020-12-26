@@ -10,12 +10,14 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import BookCard from '../components/BookCard';
 import '../App.css';
+import logo from '../BookFinder.png'; 
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const HomePage = () => {
   const [query, setQuery] = useState("");
   const [books, setBooks] = useState([]);
   const [pages, setPages] = useState(1);
+  const [maxResult, setMaxResult] = useState(9);
   const [page, setPage] = useState(1);
   const [foundBook, setFoundBook] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -24,7 +26,7 @@ const HomePage = () => {
     setLoading(true);
     axios({
         method: 'get',
-        url: `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${idx}&maxResults=9&key=${API_KEY}`,
+        url: `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${idx}&maxResults=${maxResult}&key=${API_KEY}`,
       })
       .then((response) => {
         setPages(Math.ceil((response.data.totalItems)/9));
@@ -61,19 +63,31 @@ const HomePage = () => {
     <React.Fragment>
       <CssBaseline />
       <header className="App-header">
-        <p>Book Finder</p>
+        <img src={logo} alt='logo' className="App-logo"/>
         <TextField 
           id="standard-basic" 
           label="Search Book (title, author, etc)" 
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={(e) => {
             if (e.key === 'Enter') onCLickSearch()
-        }}
-        style={{
-          width:'40vw',
-        }}
+          }}
+          style={{
+            width:'40vw',
+          }}
         />
-        <Button variant="contained" color="primary" onClick={onCLickSearch}>
+        <TextField 
+          id="maxresult" 
+          label="Max. Book Result (default: 9)" 
+          onChange={(e) => setMaxResult(e.target.value)}
+          type="number"
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') onCLickSearch()
+          }}
+          style={{
+            width:'40vw',
+          }}
+        />
+        <Button variant="contained" style={{marginTop: 10}} color="primary" onClick={onCLickSearch}>
           Search
         </Button>
       </header>
