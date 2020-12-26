@@ -21,41 +21,58 @@ const useStyles = makeStyles((theme) => ({
   cardMedia: {
     paddingTop: '76.25%', // 16:9
     width: '100%',
-    backgroundSize: 'contain'
+    height: '100%',
+    backgroundSize: 'contain',
+    '&:hover': {
+      cursor: "pointer",
+    }
   },
   cardContent: {
-    flexGrow: 1,
+    textAlign: 'left',
   },
+  cardTitle: {
+    fontWeight: 'bold',
+    '&:hover': {
+      cursor: "pointer",
+    }
+  }
 }));
 
 export default function BookCard ({card}) {
   const classes = useStyles();
   return (
     <Grid item key={card.id} xs={12} sm={6} md={4}>
-      <Card className={classes.card} onClick={()=> window.open(card.volumeInfo.infoLink, "_blank")}>
-        <Grid container spacing={4}>
+      <Card className={classes.card}>
+        <Grid container>
           <Grid item xs={4}>
             <CardMedia
               className={classes.cardMedia}
               image={card.volumeInfo.imageLinks ? card.volumeInfo.imageLinks.smallThumbnail : ""}
               title="Image title"
+              onClick={()=> window.open(card.volumeInfo.infoLink, "_blank")}
             />
           </Grid>
           <Grid item xs={8}>
             <CardContent className={classes.cardContent}>
-              <Typography gutterBottom>
-                {card.volumeInfo.title.substring(0,20)}
+              <Typography gutterBottom onClick={()=> window.open(card.volumeInfo.infoLink, "_blank")} className={classes.cardTitle}>
+                {card.volumeInfo.title.length > 25 ? card.volumeInfo.title.substring(0,25)+'...' : card.volumeInfo.title}
               </Typography>
-              <Typography>
-                {/* {card.volumeInfo.description} */}
+              <Typography variant="caption" display="block" gutterBottom>
+                by : {card.volumeInfo.authors && card.volumeInfo.authors.join(", ")}
+              </Typography>
+              <Typography variant="caption" display="block" gutterBottom>
+                Publisher : {card.volumeInfo.publisher && card.volumeInfo.publisher}
+              </Typography>
+              <Typography variant="caption" display="block" gutterBottom>
+                Published Date : {card.volumeInfo.publishedDate && card.volumeInfo.publishedDate}
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small" color="primary">
-                View
+              <Button size="small" color="primary" onClick={()=> window.open(card.volumeInfo.previewLink, "_blank")}>
+                Preview
               </Button>
-              <Button size="small" color="primary">
-                Edit
+              <Button size="small" color="primary" onClick={()=> window.open(card.volumeInfo.infoLink, "_blank")}>
+                More Info
               </Button>
             </CardActions>
           </Grid>
