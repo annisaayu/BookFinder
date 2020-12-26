@@ -10,10 +10,20 @@ REACT_APP_API_KEY=[API Key] # The API Key is included in the email
 
 Install the dependencies and devDependencies and start the server.
 
+#### Using yarn
+
 ```sh
 cd BookFinder
-yarn install or npm install
-yarn start or npm start
+yarn install
+yarn start
+```
+
+#### Using npm
+
+```sh
+cd BookFinder
+npm install
+npm start
 ```
 
 ### How To Use
