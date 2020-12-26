@@ -1,7 +1,7 @@
 # BookFinder
 Book Finder WebApp Using ReactJS, Material UI and Google Books API
 
-### Installation
+## Installation
 
 Before installing the dependencies, create an .env file in project folder and add a variable REACT_APP API KEY = [Google API Key] #The API Key is included in the email
 
@@ -12,4 +12,7 @@ cd BookFinder
 yarn install or npm install
 yarn start or npm start
 ```
+
+### How To Use
+
 
